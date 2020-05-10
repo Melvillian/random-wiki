@@ -2,6 +2,8 @@ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
+var multer = require('multer');
+var upload = multer();
 var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
@@ -21,6 +23,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
+// for parsing multipart/form-data
+app.use(upload.array());
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
