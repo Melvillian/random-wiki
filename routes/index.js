@@ -20,30 +20,29 @@ router.get('/', function(req, res, next) {
 });
 
 /* POST register new user */
-router.post('/register', function(req, res, next) {
-  if (!!req.body.wikisite) { // TODO sanitize the URL and return error if it's incorrect
+router.post('/register', async function(req, res, next) {
+  try {
+    if (!!req.body.wikisite) { // TODO sanitize the URL and return error if it's incorrect
     // fetch wikipage and extract categories
-    getPageCategories("Winston Churchill")
-    .then((categories) => {
-      console.log(JSON.stringify(categories, null, 2));
-      res.render('wikipage', { title: 'A Random Wiki' });
-    })
-    .catch(next);
-  } else {
-    // TODO fix this
-    console.log(`barf: ${req.body}`);
+    const categories = await getPageCategories("Winston Churchill");
+    res.redirect('/');
+    } else {
+      // TODO return proper error message, this should only be called with the wikisite in the POST
+      console.log(`barf: ${req.body}`);
+    }
+  } catch (error) {
+    return next(error)
   }
 });
 
-const getPageCategories = (pageName) => {
-  return wiki({ headers: { 'User-Agent': 'my-script-name (https://my-script-link; my@email) wiki.js' } })
-    .page(pageName)
-    .then((page) => page.categories())
-    .then((rawCategories) => {
-      return rawCategories
-      .map((category) => category.substring(9)) // every raw category from wiki looks like "Category:1874 births", so we need to cut out the prefix
-      .filter((category) => !_.startsWith(category, "Wikipedia") && !_.startsWith(category, "Articles")); // remove wikipedia's meta categories we don't like
-    });
+const getPageCategories = async (pageName) => {
+  const page = await wiki({ headers: { 'User-Agent': 'my-script-name (https://my-script-link; my@email) wiki.js' } }).page(pageName);
+  const rawCategories = await page.categories();
+  return rawCategories
+    // every raw category from wiki looks like "Category:1874 births", so we need to cut out the prefix
+    .map((category) => category.substring(9))
+     // remove wikipedia's meta categories we don't like
+    .filter((category) => !_.startsWith(category, "Wikipedia") && !_.startsWith(category, "Articles"));
 }
 
 // TODO do this so the session cannot be guesses
