@@ -1,9 +1,11 @@
 var express = require('express');
 var _ = require('lodash');
+const validUrl = require('valid-url');
 var router = express.Router();
 var wiki = require('wikijs').default;
 
 /* GET home page. */
+// TODO generic error handling
 router.get('/', function(req, res, next) {
   // Cookies that have not been signed
   console.log('Cookies: ', req.cookies)
@@ -20,16 +22,17 @@ router.get('/', function(req, res, next) {
 });
 
 /* POST register new user */
+// TODO generic error handling
 router.post('/register', async function(req, res, next) {
   try {
-    if (!!req.body.wikisite) { // TODO sanitize the URL and return error if it's incorrect
+    const wikisite = req.body.wikisite;
+    if (!validUrl.isHttpUri(wikisite) && !validUrl.isHttpsUri(wikisite)) {
+      throw new Error(`need a valid URL for req.body.wikisite: ${wikisite}`);
+    }
+
     // fetch wikipage and extract categories
     const categories = await getPageCategories("Winston Churchill");
     res.redirect('/');
-    } else {
-      // TODO return proper error message, this should only be called with the wikisite in the POST
-      console.log(`barf: ${req.body}`);
-    }
   } catch (error) {
     return next(error)
   }
