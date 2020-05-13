@@ -28,6 +28,11 @@ router.post('/register', async function (req, res, next) {
     if (_.isEmpty(categories)) {
       throw new Error(`could not find an interesting enough wikipedia entry for ${wikitopic}`);
     }
+    const newCookie = generateSessionCookie();
+    
+    // create user
+    // create categories
+    // create user_categories
 
     res.redirect('/');
   } catch (error) {
