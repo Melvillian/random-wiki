@@ -22,7 +22,7 @@ router.get('/', function (req, res, next) {
 
 /* POST register new user */
 // TODO generic error handling
-router.post('/register', async function (req, res, next) {
+router.post('/register', async (req, res, next) => {
   try {
     const wikipage = req.body.wikipage; // a wikipedia wikipage, like "Winston Churchill"
 
@@ -31,15 +31,15 @@ router.post('/register', async function (req, res, next) {
     if (_.isEmpty(categories)) {
       throw new Error(`could not find an interesting enough wikipedia entry for ${wikipage}`);
     }
-    const newCookie = generateSessionCookie();
+    const cookie = generateSessionCookie();
 
-    //const success = await db.newUserSignup(categories, newCookie);
+    await db.newUserSignup(cookie, categories);
 
     const category = categories[0];
     console.log(`category: ${category}`);
-    const randomPage = await getRandomPageInCategory(category);
-
-    //res.cookie("user_cookie", newCookie, { maxAge: 10000 });
+    //const randomPage = await getRandomPageInCategory(category);
+    const randomPage = "Winston_Churchill";
+    //res.cookie("user_cookie", newCookie, { maxAge: 364 * 24 * 60 * 1000 }); // 1 year
 
     //res.redirect('/');
     res.render('wikipage', wikipagePugOptions(randomPage));
@@ -53,11 +53,12 @@ const wikipagePugOptions = (wikipage) => {
   const topic = _.replace(wikipage, ' ', '_'); // wikipedia pages use underscores instead of spaces
 
   return {
-    url: `https://en.wikipedia.org/wiki/${topic}`,
-    title: "testtest",
+    url: `https://en.wikipedia.org/wiki/${topic}`
   }
 }
 
+// We want to keep our potential categories to choose from interesting, and so we must remove any
+// uninteresting categories we may come across
 const unwantedCategoryPrefixes = [
   "Wikipedia",
   "Articles",

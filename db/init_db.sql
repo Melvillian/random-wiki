@@ -13,13 +13,18 @@ CREATE TABLE IF NOT EXISTS user_profile (
 
 CREATE TABLE IF NOT EXISTS category (
     id serial PRIMARY KEY,
-    name text UNIQUE NOT NULL,
-    count integer NOT NULL DEFAULT 1
+    category_name text UNIQUE NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS page (
+    is serial PRIMARY KEY,
+    page_name text UNIQUE NOT NULL,
+    category_id int REFERENCES category (id),
+)
 
 CREATE TABLE IF NOT EXISTS user_profile_category (
     user_id int REFERENCES user_profile (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    category_id int REFERENCES category (id) ON UPDATE CASCADE,
+    category_id int REFERENCES category (id) ON UPDATE CASCADE ON DELETE CASCADE,
 
     CONSTRAINT user_category_pkey  PRIMARY KEY (user_id, category_id)
 );

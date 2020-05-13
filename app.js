@@ -6,6 +6,11 @@ var multer = require('multer');
 var upload = multer();
 var logger = require('morgan');
 
+// setup postgres and attach to server global object for later use
+const postgres = require('postgres');
+const sql = postgres('postgres://melvillian:password@localhost:5432/melville_wiki')
+process.global = { sql };
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
