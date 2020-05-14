@@ -1,7 +1,3 @@
--- DROP TABLE user_profile_category;
--- DROP TABLE user_profile;
--- DROP TABLE category;
-
 CREATE TABLE IF NOT EXISTS user_profile (
     id serial PRIMARY KEY,
     cookie text UNIQUE NOT NULL,
@@ -30,21 +26,3 @@ CREATE TABLE IF NOT EXISTS user_profile_category (
     category_id int REFERENCES category (id) ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT user_category_pkey  PRIMARY KEY (user_id, category_id)
 );
-
--- insert into category (
---     name
---   ) values (
---     'Winston Churchill'
---   );
-
--- insert into user_profile (
---     cookie
---   ) values (
---     'floop'
---   );
-
--- insert into user_profile_category (
---     user_id, category_id
---     ) values (
---         1, 1
---     );

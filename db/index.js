@@ -75,7 +75,7 @@ const getRandomPrefetchedCategoryForUser = async (cookie) => {
         SELECT category.category_name FROM user_profile
         INNER JOIN user_profile_category ON user_profile.id = user_profile_category.user_id
         INNER JOIN category ON category.id = user_profile_category.category_id AND category.are_pages_fetched = TRUE
-        WHERE cookie='${cookie}'
+        WHERE cookie=${cookie}
         ORDER BY RANDOM()
         LIMIT 1
     `
