@@ -26,9 +26,10 @@ CREATE INDEX category_id_idx ON pages (category_id);
 CREATE TABLE IF NOT EXISTS user_profile_category (
     user_id int REFERENCES user_profile (id) ON UPDATE CASCADE ON DELETE CASCADE,
     category_id int REFERENCES category (id) ON UPDATE CASCADE ON DELETE CASCADE,
-
+    are_pages_fetched boolean,
     CONSTRAINT user_category_pkey  PRIMARY KEY (user_id, category_id)
 );
+CREATE INDEX user_id_are_pages_fetched_idx ON user_profile_category (user_id, are_pages_fetched);
 
 -- insert into category (
 --     name

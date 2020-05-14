@@ -8,7 +8,18 @@ const db = require('../db/index');
 router.get('/', async function (req, res, next) {
   try {
     if (!_.isUndefined(req.cookies.user_cookie)) {
-      const category = await db.getRandomCategoryForUser(req.cookies.user_cookie);
+      let category;
+      if (Math.random() < 0.2) { // 20% chance to fetch a new set of pages from wikipedia, 80% chance re re-use an existing one
+        // we do this to reduce the number of times we have to hit wikipedia's servers, because when we do it too much things slow down
+        category = await db.getRandomCategoryForUser(req.cookies.user_cookie);
+      } else {
+        category = await db.getRandomPrefetchedCategoryForUser(req.cookies.user_cookie);
+        if (_.isUndefined(category)) {
+          // this means this is the first time the user has joined and we don't have a any prefetched
+          // categories, so fall back to fetching a new one.
+          category = await db.getRandomCategoryForUser(req.cookies.user_cookie);
+        }
+      }
       const randomPage = await getRandomPageInCategory(category);
 
       res.render('wikipage', wikipagePugOptions(randomPage));

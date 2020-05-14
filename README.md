@@ -16,7 +16,7 @@ A birthday present for Dad so we can find better wikipedia pages to read
 
 ## TODO
 
-- [ ] Set cookie for each user so we can keep track of their user id
+- [X] Set cookie for each user so we can keep track of their user id
 - [X] setup amazon RDS (create tables, schemas, and api key)
 - [X] add initializer page where user can upload pages they like and then from there we can seed the categories to search for randomness in
   - [] for each random page displayed remember which category we chose from, so then if the user doesn't like it we can remove that category from the seed category list

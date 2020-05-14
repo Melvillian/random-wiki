@@ -14,7 +14,6 @@ const sql = postgres(postgresConnectionStr)
 process.global = { sql };
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 
 var app = express();
 
@@ -29,7 +28,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 
 // for parsing multipart/form-data
 app.use(upload.array());
