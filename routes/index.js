@@ -99,7 +99,6 @@ const wikiWithHeaders = () => {
   return wiki({ headers: { 'User-Agent': 'melville_wiki_script (http://melville.wiki; amelville93@yahoo.com) wiki.js' } });
 }
 
-// TODO make this cache the wiki categories in the DB so we don't have to hit wikipedia's API for that category in the future
 // Return a random wikipage from a given category
 const getRandomPageInCategory = async (category) => {
   // check if we've already inserted this category's pages in our DB, and if so grab from there.

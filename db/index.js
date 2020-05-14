@@ -73,9 +73,9 @@ const newUserSignup = async (cookie, categories, username, passwd) => {
 const getRandomPrefetchedCategoryForUser = async (cookie) => {
     const records = await sqlDefault`
         SELECT category.category_name FROM user_profile
-        INNER JOIN user_profile_category ON user_profile.id = user_profile_category.user_id AND user_profile_category.are_pages_fetched = TRUE
-        INNER JOIN category ON category.id = user_profile_category.category_id
-        WHERE cookie=${cookie}
+        INNER JOIN user_profile_category ON user_profile.id = user_profile_category.user_id
+        INNER JOIN category ON category.id = user_profile_category.category_id AND category.are_pages_fetched = TRUE
+        WHERE cookie='${cookie}'
         ORDER BY RANDOM()
         LIMIT 1
     `
@@ -115,6 +115,9 @@ const getRandomPageInCategory = async (category) => {
     return page;
 }
 
+// TODO do not use the DO UPDATE hack for conflicts,
+// see https://stackoverflow.com/questions/34708509/how-to-use-returning-with-on-conflict-in-postgresql/42217872#42217872
+// and https://dba.stackexchange.com/questions/129522/how-to-get-the-id-of-the-conflicting-row-in-upsert
 const insertPages = async (allPages, category) => {
     const [categoryRecord] = await sqlDefault`
         select id from category
@@ -139,6 +142,12 @@ const insertPages = async (allPages, category) => {
             SET page_name=EXCLUDED.page_name
         `
     }
+
+    await sqlDefault`
+        update category
+        SET are_pages_fetched = TRUE
+        WHERE category_name = ${category}
+    `
 }
 
 const categoryExists = async (category) => {

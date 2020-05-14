@@ -12,7 +12,7 @@ A birthday present for Dad so we can find better wikipedia pages to read
 2. cd to the random-wiki dir
 3. `git pull && npm install`
 4. `killall node` # note that this will kill the website and no clients will connect
-5. `nohup npm start &`
+5. `nohup npm start &` # note, if in prod you will need to pass NODE_ENV=production PG_CONN_STR=postgres://... before the `nohup`
 
 ## TODO
 
