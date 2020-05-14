@@ -16,11 +16,12 @@ CREATE TABLE IF NOT EXISTS category (
     category_name text UNIQUE NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS page (
-    is serial PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS pages (
+    id serial PRIMARY KEY,
     page_name text UNIQUE NOT NULL,
-    category_id int REFERENCES category (id),
-)
+    category_id int REFERENCES category (id)
+);
+CREATE INDEX category_id_idx ON pages (category_id);
 
 CREATE TABLE IF NOT EXISTS user_profile_category (
     user_id int REFERENCES user_profile (id) ON UPDATE CASCADE ON DELETE CASCADE,

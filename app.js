@@ -8,7 +8,9 @@ var logger = require('morgan');
 
 // setup postgres and attach to server global object for later use
 const postgres = require('postgres');
-const sql = postgres('postgres://melvillian:password@localhost:5432/melville_wiki')
+const postgresConnectionStr = process.env.PG_CONN_STR
+  || 'postgres://melvillian:password@localhost:5432/melville_wiki';
+const sql = postgres(postgresConnectionStr)
 process.global = { sql };
 
 var indexRouter = require('./routes/index');
