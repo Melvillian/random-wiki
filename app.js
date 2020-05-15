@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var multer = require('multer');
 var upload = multer();
 var logger = require('morgan');
+var favicon = require('serve-favicon');
 
 // setup postgres and attach to server global object for later use
 const postgres = require('postgres');
@@ -26,6 +27,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(favicon(__dirname + '/public/images/favicon.ico'));
 
 app.use('/', indexRouter);
 
